@@ -7,9 +7,13 @@ import AddDevice from '../screens/accountScreens/adddeviceScreen'
 import Menu from '../screens/accountScreens/menuAccount';
 import ChangePass from '../screens/accountScreens/changepassScreen';
 import Editprofile from '../screens/accountScreens/editprofileScreen';
+import Infoprofile from '../screens/accountScreens/inforaccScreen';
+import InforUser from '../screens/adminScreens/inforuserScreen';
+import AddUser from '../screens/adminScreens/adduser';
 import CheckAuthRouter from './CheckAuthRouter';
 import Admin from '../screens/adminScreens/adminScreen';
 import Devices from '../screens/deviceScreens/deviceScreen';
+import EditDevice from '../screens/deviceScreens/editDeviceScreen'
 import ViewStatus from '../screens/deviceScreens/viewScreen';
 export const AuthStack = createStackNavigator({ 
     Main_Home: {
@@ -58,6 +62,7 @@ export const Tabbar = createBottomTabNavigator({
 },{
     tabBarOptions:{
         style:{
+            justifyContent:'center',
             backgroundColor:'#dddddd',
         },
         activeTintColor:'blue',
@@ -76,8 +81,20 @@ export const HomeStack = createStackNavigator({
     Editprofile_Form: {
         screen: Editprofile,
     },
+    Infoprofile_Form: {
+        screen: Infoprofile,
+    },
     Device_Form:{
         screen:Tabbar,
+    },
+    EditDevice_Form:{
+        screen:EditDevice,
+    },
+    InforUser_Form: {
+        screen:InforUser
+    },
+    AddUser_Form:{
+        screen:AddUser
     }
 }, {
     headerMode: 'none',

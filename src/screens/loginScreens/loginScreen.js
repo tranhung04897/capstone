@@ -1,15 +1,18 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text,View, TouchableOpacity, AsyncStorage  } from 'react-native';
+import { StyleSheet, Text,View, TouchableOpacity, AsyncStorage, Alert  } from 'react-native';
 import CustomTextInput from '../../components/CustomTextInput';
 import CustomTouchable from '../../components/CustomTouchable';
+import firebase from 'react-native-firebase';
 export default class LoginScreen extends Component {
-    
-    state = {
-        txtEmail:'',
-        txtPassword:'',
-        txtWarning: '', 
+    constructor(props) {
+        super(props);
+        this.itemRef = firebase.database();
+        this.state = {
+            txtEmail:'',
+            txtPassword:'',
+            txtWarning: '', 
+        }
     }
-
     onChangeInput = (text, name) => {
         this.setState({ [name]: text});
     }
@@ -20,18 +23,38 @@ export default class LoginScreen extends Component {
 
     onSubmit = () => {
         const { txtEmail, txtPassword } = this.state;
-
-        if (txtEmail !== 'admin' || txtPassword !== '1') {
+        if(txtEmail === '' || txtPassword === ''){
             this.setState({ txtWarning: 'Thông tin không hợp lệ!' });
             return;
+        } else {
+            firebase.auth().signInWithEmailAndPassword(txtEmail,txtPassword)
+            .then(()=>{
+                var userId = firebase.auth().currentUser.uid;
+                if(userId ==='nuMW1WN177PeyQrybFy2Q9gwd3u1'){
+                    this.setState({ txtWarning: '' }, () => {
+                        AsyncStorage.setItem('TOKEN', userId).then(() => {
+                            this.props.navigation.navigate('Admin_Form');
+                        }).catch(error => console.log(error));
+                    });
+                }else {
+                    this.setState({ txtWarning: '' }, () => {
+                        AsyncStorage.setItem('TOKEN', userId).then(() => {
+                            this.props.navigation.navigate('Account_Form');
+                        }).catch(error => console.log(error));
+                    });
+                }
+            })
+            .catch(function(error) {
+                Alert.alert(
+                    'Notification',
+                    'Email or password is not correct',
+                    [
+                        {text: 'OK', onPress: () => console.log('OK Pressed')},
+                    ],
+                    { cancelable: false }
+                )
+                });
         }
-        
-        this.setState({ txtWarning: '' }, () => {
-            AsyncStorage.setItem('TOKEN', '12321321').then(() => {
-                this.props.navigation.navigate('Account_Form');
-            }).catch(error => console.log(error));
-        });
-
     }
 
     render() {
@@ -41,7 +64,7 @@ export default class LoginScreen extends Component {
 
             <View style={ styles.container } >
                 <View style={styles.content}>
-
+                    <Text>{this.state.items}</Text>
                     <CustomTextInput 
                         placeholder="Email"
                         value={txtEmail}

@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Alert  } from 'react-native';
+import { StyleSheet, Text, View, Alert, Dimensions, ImageBackground  } from 'react-native';
 import CustomHeader from '../../components/CustomHeader';
 import CustomTextInput from '../../components/CustomTextInput';
 import CustomTouchable from '../../components/CustomTouchable';
 //import { FirebaseConfig } from '../../components/FirebaseConfig';
 import firebase from 'react-native-firebase';
-class RegisterScreens extends Component {
+class AddUser extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -22,7 +22,7 @@ class RegisterScreens extends Component {
         || this.state.txtConfirm ===''){
             Alert.alert(
                 'Notification',
-                'Sign-up Fail',
+                'Add Fail',
                 [
                     {text: 'OK', onPress: () => console.log('OK Pressed')},
                     {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
@@ -46,9 +46,9 @@ class RegisterScreens extends Component {
                 .then(()=>{
                     Alert.alert(
                         'Notification',
-                        'Sign-up Success with: '+this.state.txtEmail,
+                        'Add Success with: '+this.state.txtEmail,
                         [
-                            {text: 'OK', onPress: () => console.log(this.props.navigation.navigate('Main_Home'))},
+                            {text: 'OK', onPress: () => console.log(this.props.navigation.goBack())},
                             
                         ],
                         
@@ -77,7 +77,14 @@ class RegisterScreens extends Component {
     render() {
         return (
             <View style={ styles.container } >
-            <CustomHeader name="Register Screen" />
+            <View>
+                    <CustomHeader name="Register Screen" />
+            </View>
+            <ImageBackground
+                        source={require('../../assets/backgroud1.jpg')}
+                        style={styles.backgroundImage}
+                        resizeMode="cover"
+                        >
             <View style={ styles.viewTwoInput}>
                 <CustomTextInput
                     onChangeText={(text) => this.onChangeInput(text, 'txtEmail')}
@@ -103,10 +110,11 @@ class RegisterScreens extends Component {
                     <CustomTouchable 
                         onPress={this.onSubmit} >
                         <Text style={{fontWeight: 'bold',fontSize:15}}>
-                        Sign-Up
+                        Add
                         </Text>
                     </CustomTouchable>
                 </View>
+                </ImageBackground>
             </View>
             );
         }
@@ -130,5 +138,10 @@ const styles = StyleSheet.create({
         flex:1,
         alignItems:'center'
     },
+    backgroundImage: {
+        width: Dimensions.get('window').width,
+        height: Dimensions.get('window').height,
+        paddingHorizontal: 5,
+      },
   });
-  export default RegisterScreens;
+  export default AddUser;

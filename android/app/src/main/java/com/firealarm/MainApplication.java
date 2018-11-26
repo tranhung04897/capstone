@@ -1,10 +1,14 @@
 package com.firealarm;
 
 import android.app.Application;
-
 import com.facebook.react.ReactApplication;
+import com.github.wuxudong.rncharts.MPAndroidChartPackage;
+import com.oblador.vectoricons.VectorIconsPackage;
+import io.invertase.firebase.RNFirebasePackage;
 import io.invertase.firebase.RNFirebasePackage;
 import io.invertase.firebase.database.RNFirebaseDatabasePackage; // <-- Add this line
+import io.invertase.firebase.firestore.RNFirebaseFirestorePackage;
+import io.invertase.firebase.auth.RNFirebaseAuthPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -25,8 +29,11 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new MPAndroidChartPackage(),
           new RNFirebasePackage(),
-          new RNFirebaseDatabasePackage(), // <-- Add this line
+          new RNFirebaseAuthPackage(),
+          new RNFirebaseDatabasePackage(),
+          new RNFirebaseFirestorePackage(), // <-- Add this line
           new VectorIconsPackage()
       );
     }

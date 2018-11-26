@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, ImageBackground, Dimensions, Alert  } from 'react-native';
+import { StyleSheet, Text, View, ImageBackground, Dimensions, Alert, ActivityIndicator  } from 'react-native';
 import CustomHeader from '../../components/CustomHeader';
 import CustomTextInput from '../../components/CustomTextInput';
 import CustomTouchable from '../../components/CustomTouchable';
@@ -14,7 +14,7 @@ var gender = [
         label: "Female", value:1
     }
 ];
-export default class AddDevice extends Component { 
+export default class InforuserScreen extends Component { 
     constructor(props) {
         super(props);
         this.itemRef = firebase.database();
@@ -29,19 +29,40 @@ export default class AddDevice extends Component {
     onChangeInput = (text, name) =>{
         this.setState({ [name]: text});
     }
-    onSubmit = () => {
+    componentDidMount(){
+        this.readbyId();
+      }
+    readbyId = () => {
+        var userId = this.props.navigation.state.params.ID;
+       
+        firebase.database().ref('/users/' + userId).on('value', (snapshot) =>
+         {
+            var object = snapshot.val();
+            this.setState({
+                txtName: object.name,
+                txtEmail: object.email,
+                txtPhone: object.phone,
+                txtAddress: object.address,
+                date: object.dob,
+            });
+        })
+       
+    }
+    onEdit = ()=>{
         var userId = firebase.auth().currentUser.uid;
         const {txtEmail,txtAddress,txtName,txtPhone,date,gender}= this.state;
-        if(txtEmail ==='' || txtAddress==='' || txtName==='' ||txtPhone==='' || date ===''){
+        if(txtEmail ==='' || txtAddress==='' || txtName==='' || txtPhone==='' || date ===''){
             Alert.alert(
+                'Notification',
                 'Save Fail',
                 [
                     {text: 'OK', onPress: () => console.log('OK Pressed')},
+                    {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
                 ],
                 { cancelable: false }
               )
         }else{
-        firebase.database().ref('users/'+userId).set({
+        firebase.database().ref('users/'+userId).update({
             name:txtName,
             address:txtAddress,
             email:txtEmail,
@@ -50,17 +71,20 @@ export default class AddDevice extends Component {
             gender:gender
         }).then(()=>{
             Alert.alert(
+                'Notification',
                 'Save Success',
                 [
-                    {text: 'OK', onPress: () => console.log(this.props.navigation.navigate('Account_Form'))},
+                    {text: 'OK', onPress: () => console.log(this.props.navigation.goBack())},
                 ],
                 { cancelable: false }
               )
         }).catch(function(error) {
             Alert.alert(
+                'Notification',
                 'Save Fail',
                 [
                     {text: 'OK', onPress: () => console.log('OK Pressed')},
+                    {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
                 ],
                 { cancelable: false }
               )
@@ -68,10 +92,14 @@ export default class AddDevice extends Component {
         }
     }
     render(){
+        if (this.state.txtName !=='') {
+            <ActivityIndicator />
+        }
+
         return(
             <View style={ styles.container } >
                 <View style ={styles.block1}>
-                    <CustomHeader name="Edit Profile" />
+                    <CustomHeader name="Profile" />
                 </View>
                 <ImageBackground
                     source={require('../../assets/backgroud1.jpg')}
@@ -134,7 +162,7 @@ export default class AddDevice extends Component {
                             value={this.state.txtPhone}
                             placeholder="0707198133"
                         />
-                        <CustomTouchable onPress={this.onSubmit} >
+                        <CustomTouchable onPress={this.onEdit} >
                             <Text style={{fontWeight: 'bold',fontSize:15}}>SAVE</Text>
                         </CustomTouchable>
                     </View>

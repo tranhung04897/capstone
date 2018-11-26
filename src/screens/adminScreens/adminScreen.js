@@ -1,30 +1,79 @@
 import React, { Component} from 'react';
-import {View, ListView, StyleSheet, Text, ImageBackground, Dimensions, TextInput, TouchableOpacity} from 'react-native';
+import { FlatList, View, StyleSheet, Text, ImageBackground, Dimensions, TextInput, TouchableOpacity} from 'react-native';
 import CustomHeaderAC from '../../components/CustomHeaderAc';
+import Icon from 'react-native-vector-icons/Ionicons'; // Font Ionícs
+import firebase from 'react-native-firebase';
 class AdminScreen extends Component {
     constructor(props) {
         super(props);
-
-        data = [];
-        for( let i=0; i< 10; i++){
-            data.push(i);
-        }
-        const ds = new ListView.DataSource({ rowHasChanged:(r1,r2) =>r1 !== r2 });
-        this.state = {
-            dataSource:ds.cloneWithRows(data),
+        this.itemRef = firebase.database().ref('/users/');
+        this.state ={
+            mang:[],
         }
     }
-    _renderRow(data){
-        return(
-            <View style= {styles.box}>
-                <Text>{data}</Text>
+    keyExtractor = (item) => {
+        item.id;
+    }
+    
+    renderItem = ({item}) =>
+    <View>
+        <TouchableOpacity onPress={()=>{this.props.navigation.navigate('InforUser_Form',{ ID:item.key })}} >
+        <View style={styles.box}>
+        <Icon name='md-aperture' size={30} />
+            <Text style={{fontWeight:'bold'}}>
+                Name: {item.name}
+            </Text>
+            <Text style={{fontWeight:'bold'}}>
+                Address: {item.address}
+            </Text>
+            <Text style={{fontWeight:'bold'}}>
+                Dob: {item.dob}
+            </Text>
+            <Text style={{fontWeight:'bold'}}>
+                Phone: {item.phone}
+            </Text>
+        </View>
+        </TouchableOpacity>
+        <TouchableOpacity 
+        onPress={()=>{this.itemRef.child(item.key).remove()}}
+        >
+            <View style={{
+                width:140,
+                height:20,
+                backgroundColor:'#3796f3',
+                justifyContent:'center',
+                alignItems:'center',
+                borderRadius:10,
+                marginVertical:10}}>
+                    <Text>Xóa</Text>
             </View>
-        )
+        </TouchableOpacity>
+    </View>;
+        
+    listenForItems = (itemsRef)=> {
+        itemsRef.on('value', (snap) => {
+            var items = [];
+            snap.forEach((data) => {
+            items.push({
+                key: data.key,
+                name: data.val().name,
+                address: data.val().address,
+                dob:data.val().dob,
+                email:data.val().email,
+                phone:data.val().phone,
+            });
+            });
+            this.setState({mang: items});
+        });
+        }
+        
+    onAddIcon = () =>{
+        this.props.navigation.navigate('AddUser_Form');
     }
     render(){
         return(
             <View style={styles.container}>
-                 <View>
+                <View>
                     <CustomHeaderAC name="Admin Screen" />
                 </View>
                 <ImageBackground
@@ -35,29 +84,36 @@ class AdminScreen extends Component {
                     <View style={styles.block2} >   
                         <TextInput style={styles.searchbox}
                             placeholder='Search box' />
-                        <TouchableOpacity style={styles.btn}>
+                        <TouchableOpacity 
+                        onPress={this.onAddIcon}
+                        style={styles.btn}>
                             <Text>ADD</Text>
                         </TouchableOpacity>
-                        <ListView
-                            renderRow={ this._renderRow.bind(this) }
-                            dataSource={ this.state.dataSource }
-                            contentContainerStyle={{flexDirection:'row',flexWrap:'wrap'}}
-                            pageSize= {data.lenght}
+                        <FlatList
+                        data = {this.state.mang}
+                        keyExtractor = {this.keyExtractor}
+                        renderItem = {this.renderItem}
+                        style={{marginTop: 20}}
+                        horizontal={false}
+                        numColumns={2}
                         />
                     </View> 
                 </ImageBackground>
             </View>
         );
     }
+    componentDidMount() {
+        this.listenForItems(this.itemRef);
+      };
 }
 const styles= StyleSheet.create({
     container:{
         flex:1,
     },
     box:{
-        width:120,
-        height:100,
-        backgroundColor:'gray',
+        width:140,
+        height:150,
+        backgroundColor:'white',
         borderRadius:5,
         justifyContent:'center',
         alignItems:'center',

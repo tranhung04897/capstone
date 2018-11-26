@@ -14,10 +14,13 @@ export default class MenuAccount extends Component {
     onEdit = () => {
         this.props.navigation.navigate('Editprofile_Form');
     }
+    onView = ()=> {
+        this.props.navigation.navigate('Infoprofile_Form');
+    }
     render() {
         return (
             <View style={styles.menuContainer}>
-                <TouchableOpacity onPress={this.onEdit}
+                <TouchableOpacity onPress={this.onView}
                     style={styles.btn}
                 >   
                     <Text style={styles.touchTxt}>
