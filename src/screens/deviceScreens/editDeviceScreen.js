@@ -18,9 +18,7 @@ export default class EditDevice extends Component {
     onChangeInput = (text, name) =>{
         this.setState({ [name]: text});
     }
-    componentDidMount(){
-        this.readbyId();
-      }
+    
     readbyId = () => {
         var userId = firebase.auth().currentUser.uid;
         firebase.database().ref('/devices/' + userId).child(this.state.key).on('value', (snapshot) =>
@@ -51,7 +49,7 @@ export default class EditDevice extends Component {
             Alert.alert(
                 'Save Success',
                 [
-                    {text: 'OK', onPress: () => console.log(this.props.navigation.goBack())},
+                    {text: 'OK', onPress: () => console.log('OK')},
                 ],
                 { cancelable: false }
               )
@@ -82,7 +80,7 @@ export default class EditDevice extends Component {
                             onChangeText={(text) => this.onChangeInput(text, 'name')}
                             value={this.state.name}
                         />
-                        
+                    
                         <CustomTextInput
                             onChangeText={(text) => this.onChangeInput(text, 'id')}
                             value={this.state.id}
@@ -96,6 +94,9 @@ export default class EditDevice extends Component {
             </View>
         );
     }
+    componentDidMount(){
+        this.readbyId();
+      }
 }
 const styles = StyleSheet.create({
     backgroundImage: {

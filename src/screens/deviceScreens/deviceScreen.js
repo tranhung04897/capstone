@@ -1,26 +1,69 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity  } from 'react-native';
+import {  StyleSheet, Text, View, TouchableOpacity, AsyncStorage   } from 'react-native';
 //import CustomTouchable from '../../components/CustomTouchable';
 import Icon from 'react-native-vector-icons/Ionicons'; // Font Ionícs
+import firebase from 'react-native-firebase';
+import  { Notification, NotificationOpen } from 'react-native-firebase';
+
 export default class DeviceScreen extends Component {
-    
-onPressEdit = ()=>{
-    var id = this.props.navigation.state.params.ID;
-    this.props.navigation.navigate('EditDevice_Form',{ ID:id })
-}
+    constructor(props) {
+        super(props);
+        var id = this.props.navigation.state.params.ID;
+        this.itemRef = firebase.database().ref('/DATA/'+id);
+        this.state ={
+            dulieu:'',
+            icon:'safety.jpg',
+            txtWarning:''
+        }
+    }
+
+    listenForItems = (itemsRef)=> {
+       
+        itemsRef.child('status').on('value', (snapshot) =>
+        {
+            var object = snapshot.val();
+            if(object < 400 ){
+                this.setState({
+                    dulieu: object,
+                    icon:'blue',
+                    txtWarning:'Safe'
+                });
+            }if( object > 400 && object < 600){
+                this.setState({
+                    dulieu: object,
+                    icon:'yellow',
+                    txtWarning:'Warning'
+                });
+            }
+            if(object > 600) {
+                this.setState({
+                    dulieu: object,
+                   icon:'red',
+                    txtWarning:'Danger'
+                });
+            }
+        });
+        }
+    onPressEdit = ()=>{
+        var KEY = this.props.navigation.state.params.KEY;
+        this.props.navigation.navigate('EditDevice_Form',{ ID:KEY })
+    }
 render() {
     return (
         <View style={ styles.container } >
             <View style={{flexDirection:'row',justifyContent:'space-between'}}>
                 <Text></Text>
+                
                 <TouchableOpacity onPress={this.onPressEdit}>
                     <Icon name='md-alert' size={30} /> 
+                    
                 </TouchableOpacity>
             </View>
             <View style= { styles.block1} >
-                <Icon
-                    name='md-arrow-dropup-circle' size={200} color='red'
-                    />
+            <View style={{width:180,height:180,borderRadius:180,borderColor:'black',backgroundColor:this.state.icon, justifyContent:'center',alignItems: 'center',}}>
+                <Text style={{fontSize:40,fontWeight:'bold'}}>{this.state.txtWarning}</Text>
+                <Text style={{fontSize:30,fontWeight:'bold'}}>{this.state.dulieu}</Text>
+            </View>
             </View>
             <View style= { styles.block2}>
                 <Text>
@@ -30,12 +73,15 @@ render() {
                     <Icon name='md-arrow-dropup-circle' size={30} color='yellow' />-        Warn
                 </Text>
                 <Text>
-                    <Icon name='md-arrow-dropup-circle' size={30} color='green' />-        Safe
+                    <Icon name='md-arrow-dropup-circle' size={30} color='blue' />-        Safe
                 </Text>
             </View>
         </View>
         );
     }
+    componentDidMount() {
+        this.listenForItems(this.itemRef);
+      };
 }
 const styles = StyleSheet.create({
     container: {
@@ -53,5 +99,14 @@ const styles = StyleSheet.create({
         flex:1,
         justifyContent:'center',
         alignItems: 'flex-start',
-    }
+    },
+    box:{
+        width:140,
+        height:150,
+        backgroundColor:'white',
+        borderRadius:5,
+        justifyContent:'center',
+        alignItems:'center',
+        margin:5
+    },
   });

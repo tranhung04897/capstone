@@ -18,7 +18,7 @@ class AccountScreen extends Component {
     }
     renderItem = ({item}) =>
         <View>
-            <TouchableOpacity onPress={()=>{this.props.navigation.navigate('Device_Form',{ ID:item.key })}} >
+            <TouchableOpacity onPress={()=>{this.props.navigation.navigate('Device_Form',{ ID:item.id, KEY:item.key })}} >
             <View style={styles.box}>
             <Icon name='md-aperture' size={30} />
                 <Text style={{fontWeight:'bold'}}>
