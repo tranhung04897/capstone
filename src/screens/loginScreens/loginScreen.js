@@ -10,7 +10,6 @@ export default class LoginScreen extends Component {
         this.state = {
             txtEmail:'',
             txtPassword:'',
-            txtWarning: '', 
         }
     }
     onChangeInput = (text, name) => {
@@ -24,7 +23,14 @@ export default class LoginScreen extends Component {
     onSubmit = () => {
         const { txtEmail, txtPassword } = this.state;
         if(txtEmail === '' || txtPassword === ''){
-            this.setState({ txtWarning: 'Thông tin không hợp lệ!' });
+            Alert.alert(
+                'Notification',
+                'Email or password is not empty',
+                [
+                    {text: 'OK', onPress: () => console.log('OK Pressed')},
+                ],
+                { cancelable: false }
+            )
             return;
         } else {
             firebase.auth().signInWithEmailAndPassword(txtEmail,txtPassword)
@@ -58,7 +64,7 @@ export default class LoginScreen extends Component {
     }
 
     render() {
-        const { txtWarning, txtEmail, txtPassword } = this.state;
+        const {  txtEmail, txtPassword } = this.state;
 
         return (
 
@@ -77,10 +83,6 @@ export default class LoginScreen extends Component {
                         value={txtPassword}
                         onChangeText={text => this.onChangeInput(text, 'txtPassword')}
                     />
-
-                    <Text style={styles.txtWarning}>{txtWarning}</Text>
-
-                    
 
                     <CustomTouchable 
                         onPress={this.onSubmit}

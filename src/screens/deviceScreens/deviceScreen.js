@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {  StyleSheet, Text, View, TouchableOpacity, AsyncStorage   } from 'react-native';
+import {  StyleSheet, Text, View, TouchableOpacity, Alert   } from 'react-native';
 //import CustomTouchable from '../../components/CustomTouchable';
 import Icon from 'react-native-vector-icons/Ionicons'; // Font Ionícs
 import firebase from 'react-native-firebase';
@@ -16,6 +16,11 @@ export default class DeviceScreen extends Component {
             txtWarning:''
         }
     }
+    
+    async componentDidMount() {
+        this.listenForItems(this.itemRef);
+    
+    };
 
     listenForItems = (itemsRef)=> {
        
@@ -44,45 +49,45 @@ export default class DeviceScreen extends Component {
             }
         });
         }
+
     onPressEdit = ()=>{
         var KEY = this.props.navigation.state.params.KEY;
         this.props.navigation.navigate('EditDevice_Form',{ ID:KEY })
     }
-render() {
-    return (
-        <View style={ styles.container } >
-            <View style={{flexDirection:'row',justifyContent:'space-between'}}>
-                <Text></Text>
-                
-                <TouchableOpacity onPress={this.onPressEdit}>
-                    <Icon name='md-alert' size={30} /> 
+
+    render() {
+        return (
+            <View style={ styles.container } >
+                <View style={{flexDirection:'row',justifyContent:'space-between'}}>
+                    <Text></Text>
                     
-                </TouchableOpacity>
+                    <TouchableOpacity onPress={this.onPressEdit}>
+                        <Icon name='md-alert' size={30} /> 
+                        
+                    </TouchableOpacity>
+                </View>
+                <View style= { styles.block1} >
+                <View style={{width:180,height:180,borderRadius:180,borderColor:'black',backgroundColor:this.state.icon, justifyContent:'center',alignItems: 'center',}}>
+                    <Text style={{fontSize:40,fontWeight:'bold'}}>{this.state.txtWarning}</Text>
+                    <Text style={{fontSize:30,fontWeight:'bold'}}>{this.state.dulieu}</Text>
+                </View>
+                </View>
+                <View style= { styles.block2}>
+                    <Text>
+                        <Icon name='md-arrow-dropup-circle' size={30} color='red' />-        Danger
+                    </Text>
+                    <Text>
+                        <Icon name='md-arrow-dropup-circle' size={30} color='yellow' />-        Warn
+                    </Text>
+                    <Text>
+                        <Icon name='md-arrow-dropup-circle' size={30} color='blue' />-        Safe
+                    </Text>
+                </View>
             </View>
-            <View style= { styles.block1} >
-            <View style={{width:180,height:180,borderRadius:180,borderColor:'black',backgroundColor:this.state.icon, justifyContent:'center',alignItems: 'center',}}>
-                <Text style={{fontSize:40,fontWeight:'bold'}}>{this.state.txtWarning}</Text>
-                <Text style={{fontSize:30,fontWeight:'bold'}}>{this.state.dulieu}</Text>
-            </View>
-            </View>
-            <View style= { styles.block2}>
-                <Text>
-                    <Icon name='md-arrow-dropup-circle' size={30} color='red' />-        Danger
-                </Text>
-                <Text>
-                    <Icon name='md-arrow-dropup-circle' size={30} color='yellow' />-        Warn
-                </Text>
-                <Text>
-                    <Icon name='md-arrow-dropup-circle' size={30} color='blue' />-        Safe
-                </Text>
-            </View>
-        </View>
-        );
-    }
-    componentDidMount() {
-        this.listenForItems(this.itemRef);
-      };
+            );
+        }
 }
+
 const styles = StyleSheet.create({
     container: {
       flex: 1,

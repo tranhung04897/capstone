@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "535162169573-ucehn3003t67iikuup0g67g1542lc0cd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.firealarm",
+            "certificate_hash": "901f173381b1ceee9cbdfb0da7ba8a72013d6564"
+          }
+        },
+        {
           "client_id": "535162169573-r3i9li46npb4a21ojijai0b5f6tt5bk7.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,8 +37,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "535162169573-r3i9li46npb4a21ojijai0b5f6tt5bk7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2

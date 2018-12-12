@@ -15,9 +15,12 @@ class RegisterScreens extends Component {
         };
     }
     onChangeInput = (text, name) => {
+        
         this.setState({ [name]: text});
+        
     }
     onSubmit = () => {
+        var checkMail= firebase.auth().authResult.user;
         if( this.state.txtEmail === '' || this.state.txtPassword ===''
         || this.state.txtConfirm ===''){
             Alert.alert(
@@ -62,7 +65,7 @@ class RegisterScreens extends Component {
                 .catch(function(error) {
                     Alert.alert(
                         'Notification',
-                        'Sign-up Fail1',
+                        'Please enter the correct email format or email just',
                         [
                             {text: 'OK', onPress: () => console.log('OK Pressed')},
                             {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},

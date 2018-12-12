@@ -10,6 +10,7 @@ import io.invertase.firebase.database.RNFirebaseDatabasePackage; // <-- Add this
 import io.invertase.firebase.firestore.RNFirebaseFirestorePackage;
 import io.invertase.firebase.auth.RNFirebaseAuthPackage;
 import io.invertase.firebase.messaging.RNFirebaseMessagingPackage; // <-- Add this line
+import io.invertase.firebase.notifications.RNFirebaseNotificationsPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -36,7 +37,8 @@ public class MainApplication extends Application implements ReactApplication {
           new RNFirebaseDatabasePackage(),
           new RNFirebaseFirestorePackage(), // <-- Add this line
           new VectorIconsPackage(),
-          new RNFirebaseMessagingPackage() // <-- Add this line
+          new RNFirebaseMessagingPackage(), // <-- Add this line
+          new RNFirebaseNotificationsPackage()
       );
     }
 
